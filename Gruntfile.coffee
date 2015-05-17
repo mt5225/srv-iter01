@@ -31,17 +31,19 @@ module.exports = (grunt) ->
         options: config: 'myhost'
 
     sftp: #todo sftp not working ?
-      upload:
-        files:  './' : ['accesskey.json', 'package.json']
+      dev:
+        files:  './': ['dist/**', 'package.json']
         options:
           config: 'myhost'
           path: '/home/ubuntu/srviter01/bin'
+          srcBasePath: 'dist/'
+          createDirectories: true
 
   grunt.registerTask 'default', ['watch']
   grunt.registerTask 'compile', ['coffee']
   grunt.registerTask 'run-remote', [
     'coffee'
-    'sftp:upload'
+    'sftp:dev'
   ]
   grunt.registerTask 'run-local', [
     'compile'
