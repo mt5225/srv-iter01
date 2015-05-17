@@ -1,0 +1,23 @@
+## testing
+
+### sign service
+curl localhost:3000/api/sign
+
+### userinfo service
+curl localhost:3000/api/userinfo?user_openid=o82BBs8XqUSk84CNOA3hfQ0kNS90
+
+### create an new order
+curl -X POST -H "Content-Type: application/json" -d '{"orderId": "1", "houseId": "2", "checkInDay":"3", "checkOutDay": "4", "numOfGuest": "5", "wechatOpenID": "6", "wechatNickName": "7"}' localhost:3000/orders
+curl -X GET -H "Content-Type: application/json" localhost:3000/orders/6
+
+
+### order model definition
+OrderSchema = new Schema (
+  orderId: String
+  houseId: String
+  checkInDay: String
+  checkOutDay: String
+  numOfGuest: String
+  wechatOpenID: String
+  wechatNickName: String
+)

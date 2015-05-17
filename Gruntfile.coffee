@@ -11,7 +11,7 @@ module.exports = (grunt) ->
         expand: true
         flatten: false
         cwd: './src'
-        src: ['*.coffee']
+        src: ['**/*.coffee']
         dest: './dist'
         ext: '.js'
 
@@ -30,9 +30,9 @@ module.exports = (grunt) ->
         command: "echo"
         options: config: 'myhost'
 
-    sftp:
+    sftp: #todo sftp not working ?
       upload:
-        files: ['./' : 'dist/*.js']
+        files:  './' : ['accesskey.json', 'package.json']
         options:
           config: 'myhost'
           path: '/home/ubuntu/srviter01/bin'
@@ -42,6 +42,8 @@ module.exports = (grunt) ->
   grunt.registerTask 'run-remote', [
     'coffee'
     'sftp:upload'
-    'sshexec:changeport'
   ]
-  grunt.registerTask 'run-local', ['nodemon']
+  grunt.registerTask 'run-local', [
+    'compile'
+    'nodemon'
+  ]

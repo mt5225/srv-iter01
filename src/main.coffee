@@ -1,15 +1,14 @@
-express = require 'express'
-morgan = require 'morgan'
+express = require './config/express'
+mongoose = require './config/mongoose'
 sign = require './sign.js'
 jsapi = require('./jsapi').JSAPI
 userinfo = require('./userinfo').userinfo
 
 
-#todo util to load and cache key
 APPID = 'wxe2bdce057501817d'
 
+db = mongoose()
 app = express()
-app.use(morgan 'combined')
 
 ###
 sign service
@@ -28,6 +27,7 @@ app.get '/api/sign', (req, res) ->
     strSign = sign(ticket, 'http://www.mt5225.cc')
     strSign['appid'] = APPID
     console.log strSign
+    res.header('Access-Control-Allow-Origin' , '*');
     res.status(200).json strSign
 
 ###
@@ -51,7 +51,18 @@ app.get '/api/userinfo', (req, res) ->
   user_openid = req.param('user_openid')
   userinfo.get user_openid,(user)->
     console.log user
+    res.header('Access-Control-Allow-Origin' , '*');
     res.status(200).json user
+
+
+###
+  Order CRUD
+###
+orders = require './controller/order_controller'
+
+app.route('/orders').post orders.create
+app.route('/orders/:wechat_openid').get orders.list
+
 
 app.listen 3000, ->
   console.log "ready to serve"
