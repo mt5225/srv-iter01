@@ -27,7 +27,7 @@ app.get '/api/sign', (req, res) ->
     strSign = sign(ticket, 'http://www.mt5225.cc')
     strSign['appid'] = APPID
     console.log strSign
-    res.header('Access-Control-Allow-Origin' , '*');
+#    res.header('Access-Control-Allow-Origin' , '*');
     res.status(200).json strSign
 
 ###
@@ -51,7 +51,6 @@ app.get '/api/userinfo', (req, res) ->
   user_openid = req.param('user_openid')
   userinfo.get user_openid,(user)->
     console.log user
-    res.header('Access-Control-Allow-Origin' , '*');
     res.status(200).json user
 
 

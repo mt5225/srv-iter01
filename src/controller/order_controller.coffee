@@ -9,7 +9,7 @@ exports.create = (req, res, next) ->
       console.log err
       next err
     else
-      res.json order
+      res.status(200).json order
 
 #return orders by wechat open_id
 exports.list = (req, res, next) ->
@@ -22,4 +22,4 @@ exports.list = (req, res, next) ->
       console.log err
       next err
     else
-      res.json orders
+      res.status(200).json orders

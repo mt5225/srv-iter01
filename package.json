@@ -20,7 +20,8 @@
     "morgan": "^1.5.2",
     "method-override": "~2.2.0",
     "mongoose": "~3.8.15",
-    "body-parser": "~1.8.0"
+    "body-parser": "~1.8.0",
+    "cors": "~2.6.0"
   },
   "engines": {
     "node": ">=0.10.0"

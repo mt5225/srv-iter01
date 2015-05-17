@@ -2,6 +2,7 @@ express = require 'express'
 morgan = require 'morgan'
 bodyParser = require 'body-parser'
 methodOverride = require 'method-override'
+cors = require 'cors'
 
 
 module.exports = ->
@@ -12,4 +13,5 @@ module.exports = ->
   ))
   app.use bodyParser.json()
   app.use methodOverride()
+  app.use cors() #enable cross-domain ajax
   return app
