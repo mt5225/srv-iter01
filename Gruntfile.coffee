@@ -30,7 +30,7 @@ module.exports = (grunt) ->
         command: "echo"
         options: config: 'myhost'
 
-    sftp: #todo sftp not working ?
+    sftp: 
       dev:
         files:  './': ['dist/**', 'package.json']
         options:

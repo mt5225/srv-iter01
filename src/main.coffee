@@ -21,13 +21,17 @@ curl localhost:3000/api/sign
   appid: 'wxe2bdce057501817d'
 }
 ###
+
+#signURL = "http://www.mt5225.cc:9000/signTest.html"
+#signURL = "http://www.mt5225.cc:9000/"
+
 app.get '/api/sign', (req, res) ->
+  signURL = req.param('url')
   jsapi.getKey (ticket)->
     console.log "[Debug][jsapi_key] " + ticket
-    strSign = sign(ticket, 'http://www.mt5225.cc')
+    strSign = sign(ticket, signURL)
     strSign['appid'] = APPID
     console.log strSign
-#    res.header('Access-Control-Allow-Origin' , '*');
     res.status(200).json strSign
 
 ###
