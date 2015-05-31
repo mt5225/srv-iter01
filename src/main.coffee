@@ -2,8 +2,6 @@ express = require './config/express'
 mongoose = require './config/mongoose'
 sign = require './sign.js'
 jsapi = require('./jsapi').JSAPI
-userinfo = require('./userinfo').userinfo
-
 
 APPID = 'wxe2bdce057501817d'
 
@@ -49,9 +47,12 @@ curl localhost:3000/api/userinfo?user_openid=o82BBs8XqUSk84CNOA3hfQ0kNS90
   subscribe_time: 1428411986,
   remark: '',
   groupid: 0 }
+mongo
+use perfectlife
+db.users.find()
 ###
 app.get '/api/userinfo', (req, res) ->
- # user_openid = 'o82BBs8XqUSk84CNOA3hfQ0kNS90'
+  userinfo = require('./userinfo').userinfo
   user_openid = req.param('user_openid')
   userinfo.get user_openid,(user)->
     console.log user
@@ -59,13 +60,16 @@ app.get '/api/userinfo', (req, res) ->
 
 
 ###
-  Order CRUD
+ CRUD service using express and mongoose
 ###
 orders = require './controller/order_controller'
+app.route('/api/orders').post orders.create
+app.route('/api/orders/:wechat_openid').get orders.list
 
-app.route('/orders').post orders.create
-app.route('/orders/:wechat_openid').get orders.list
-
+#curl http://localhost:3000/api/users/o82BBs8XqUSk84CNOA3hfQ0kNS90
+users = require './controller/user_controller'
+app.route('/api/users').post users.create
+app.route('/api/users/:wechat_openid').get users.get
 
 app.listen 3000, ->
   console.log "ready to serve"

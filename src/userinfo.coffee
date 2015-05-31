@@ -1,6 +1,6 @@
 perfect = perfect or {}
-https = require('https')
-fs = require "fs"
+https = require 'https'
+fs = require 'fs'
 accesskey = require('./accesskey').accesskey
 
 #session manager class
