@@ -32,10 +32,10 @@ module.exports = (grunt) ->
 
     sftp: 
       dev:
-        files:  './': ['dist/**', 'package.json']
+        files:  './': ['dist/**', 'package.json', 'accesskey.json']
         options:
           config: 'myhost'
-          path: '/home/ubuntu/srviter01/bin'
+          path: '/root/srv-iter01/bin'
           srcBasePath: 'dist/'
           createDirectories: true
 

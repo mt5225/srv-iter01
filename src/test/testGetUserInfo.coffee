@@ -10,7 +10,7 @@ userinfo.get 'o82BBs8XqUSk84CNOA3hfQ0kNS90',(user)->
       json: true,
       headers:
         "content-type": "application/json",
-      body: JSON.stringify(user)
+      body: user
     }, (error, response, body) ->
       console.log body
   )

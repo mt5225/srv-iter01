@@ -13,12 +13,16 @@ exports.get = (req, res, next) ->
 
 #create new user
 exports.create = (req, res, next) ->
-  console.log "create new user"
+  console.log "create or update user"
   console.log req.body
   user  = new User(req.body)
-  user.save (err) ->
+  upsertData = user.toObject();
+  delete upsertData._id
+
+  User.update({openid: user.openid}, upsertData, {upsert: true}, (err) ->
     if err
       console.log err
       next err
     else
       res.status(200).json user
+  )

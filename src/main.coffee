@@ -1,9 +1,9 @@
 express = require './config/express'
 mongoose = require './config/mongoose'
-sign = require './sign.js'
-jsapi = require('./jsapi').JSAPI
 
 APPID = 'wxe2bdce057501817d'
+SECRET = 'c907a867dc3deebff5c0b2c392c77b90'
+REDIRECT_URL = 'http://qa.aghchina.com.cn:9000/#/'
 
 db = mongoose()
 app = express()
@@ -18,12 +18,13 @@ curl localhost:3000/api/sign
   signature: 'ec0cffe3ddbac350d75c0451c23042ea0af140f0',
   appid: 'wxe2bdce057501817d'
 }
+note: the signURL will be passed by the caller
 ###
 
-#signURL = "http://www.mt5225.cc:9000/signTest.html"
-#signURL = "http://www.mt5225.cc:9000/"
 
 app.get '/api/sign', (req, res) ->
+  sign = require './sign.js'
+  jsapi = require('./jsapi').JSAPI
   signURL = req.param('url')
   jsapi.getKey (ticket)->
     console.log "[Debug][jsapi_key] " + ticket
@@ -32,8 +33,24 @@ app.get '/api/sign', (req, res) ->
     console.log strSign
     res.status(200).json strSign
 
+
 ###
-user service
+get userinfo by wechat oauth
+@ref http://mp.weixin.qq.com/wiki/17/c0f37d5704f0b64713d5d2c37b468d75.html
+qa.aghchina.com.cn:9000/?code=031fa9f133ceba547e266fab65ead8dv&state=123#/
+###
+app.get '/api/useroauth', (req, res) ->
+  useroauth = require './useroauth'
+  code = req.param('code')
+  console.log "code = #{code}"
+  useroauth.getOAuth APPID, SECRET, code, (data) ->
+    console.log "#{REDIRECT_URL}?user_openid=#{data}"
+    res.writeHead 301, {Location: "#{REDIRECT_URL}?user_openid=#{data}"}
+    res.end()
+    
+
+###
+user service to query userinfo from wechat api
 curl localhost:3000/api/userinfo?user_openid=o82BBs8XqUSk84CNOA3hfQ0kNS90
 { subscribe: 1,
   openid: 'o82BBs8XqUSk84CNOA3hfQ0kNS90',
@@ -62,6 +79,7 @@ app.get '/api/userinfo', (req, res) ->
 ###
  CRUD service using express and mongoose
 ###
+#curl http://localhost:3000/api/orders/o82BBs8XqUSk84CNOA3hfQ0kNS90
 orders = require './controller/order_controller'
 app.route('/api/orders').post orders.create
 app.route('/api/orders/:wechat_openid').get orders.list
