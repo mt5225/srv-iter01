@@ -1,4 +1,5 @@
 perfect = perfect or {}
+config = require './config/config'
 https = require('https')
 fs = require "fs"
 
@@ -6,8 +7,8 @@ fs = require "fs"
 perfect.AccessKey = do ->
   AccessKey = ->
 
-  APPID = 'wxe2bdce057501817d'
-  APPSecret = 'c907a867dc3deebff5c0b2c392c77b90'
+  APPID = config.APPID
+  APPSecret = config.APPSecret
 
   createTimestamp = ->
     parseInt((new Date).getTime() / 1000) + ''

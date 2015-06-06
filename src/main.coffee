@@ -1,9 +1,11 @@
+process.env.NODE_ENV = process.env.NODE_ENV || 'qa';
 express = require './config/express'
 mongoose = require './config/mongoose'
+config = require './config/config'
 
-APPID = 'wxe2bdce057501817d'
-SECRET = 'c907a867dc3deebff5c0b2c392c77b90'
-REDIRECT_URL = 'http://qa.aghchina.com.cn:9000/#/'
+APPID = config.APPID
+SECRET = config.APPSecret
+REDIRECT_URL = config.REDIRECT_URL
 
 db = mongoose()
 app = express()
@@ -20,7 +22,6 @@ curl localhost:3000/api/sign
 }
 note: the signURL will be passed by the caller
 ###
-
 
 app.get '/api/sign', (req, res) ->
   sign = require './sign.js'
@@ -77,6 +78,16 @@ app.get '/api/userinfo', (req, res) ->
 
 
 ###
+ping plus plus
+@param user_openid
+###
+app.get '/api/pingplus', (req, res) ->
+  pingplus = require('./pingplus')
+  user_openid = req.param('user_openid')
+  pingplus.createCharge user_openid, (charge) ->
+    res.status(200).json charge
+
+###
  CRUD service using express and mongoose
 ###
 #curl http://localhost:3000/api/orders/o82BBs8XqUSk84CNOA3hfQ0kNS90
@@ -90,4 +101,4 @@ app.route('/api/users').post users.create
 app.route('/api/users/:wechat_openid').get users.get
 
 app.listen 3000, ->
-  console.log "ready to serve"
+  console.log "ready to serve at port 3000"

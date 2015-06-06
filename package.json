@@ -21,6 +21,8 @@
     "method-override": "~2.2.0",
     "mongoose": "~3.8.15",
     "morgan": "^1.5.2",
+    "node-uuid": "^1.4.3",
+    "pingpp": "^2.0.3",
     "request": "^2.56.0",
     "time-grunt": "^0.3.1"
   },
