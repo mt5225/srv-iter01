@@ -36,38 +36,25 @@ app.get '/api/sign', (req, res) ->
 
 
 ###
-get userinfo by wechat oauth
+call by wechat server
+如果用户同意授权，页面将跳转至 redirect_uri/?code=CODE&state=STATE。若用户禁止授权，则重定向后不会带上code参数，仅会带上state参数redirect_uri?state=STATE
+then we will redirect user to origin page
 @ref http://mp.weixin.qq.com/wiki/17/c0f37d5704f0b64713d5d2c37b468d75.html
 qa.aghchina.com.cn:9000/?code=031fa9f133ceba547e266fab65ead8dv&state=123#/
 ###
 app.get '/api/useroauth', (req, res) ->
   useroauth = require './useroauth'
   code = req.param('code')
-  console.log "code = #{code}"
-  useroauth.getOAuth APPID, SECRET, code, (data) ->
-    console.log "#{REDIRECT_URL}?user_openid=#{data}"
-    res.writeHead 301, {Location: "#{REDIRECT_URL}?user_openid=#{data}"}
+  backurl = req.param('state')
+  console.log "code = #{code}, backurl=#{backurl}"
+  useroauth.getOAuth APPID, SECRET, code, (openid) ->  #get user openid using code
+    console.log "redirct user to #{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"
+    res.writeHead 301, {Location: "#{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"}
     res.end()
     
 
 ###
-user service to query userinfo from wechat api
-curl localhost:3000/api/userinfo?user_openid=o82BBs8XqUSk84CNOA3hfQ0kNS90
-{ subscribe: 1,
-  openid: 'o82BBs8XqUSk84CNOA3hfQ0kNS90',
-  nickname: '蒋庆',
-  sex: 1,
-  language: 'en',
-  city: '朝阳',
-  province: '北京',
-  country: '中国',
-  headimgurl: 'http://wx.qlogo.cn/mmopen/PiajxSqBRaELJbrdqoOdck7Tph5OvpvMjTx1PlibRmfBSYkficu9rSkuamzCcYuvl5RhF882EJH46U1Hob5TPrB8A/0',
-  subscribe_time: 1428411986,
-  remark: '',
-  groupid: 0 }
-mongo
-use perfectlife
-db.users.find()
+@depredated get user info by openid
 ###
 app.get '/api/userinfo', (req, res) ->
   userinfo = require('./userinfo').userinfo
@@ -98,6 +85,8 @@ app.route('/api/orders/:wechat_openid').get orders.list
 #curl http://localhost:3000/api/users/o82BBs8XqUSk84CNOA3hfQ0kNS90
 users = require './controller/user_controller'
 app.route('/api/users').post users.create
+#get user info by openid, note if user doesnot exist in backend db
+#we will query wechat server and create user record
 app.route('/api/users/:wechat_openid').get users.get
 
 app.listen 3000, ->

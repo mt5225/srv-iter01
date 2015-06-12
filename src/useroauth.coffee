@@ -10,11 +10,11 @@ exports.getOAuth = (APPID, SECRET, CODE, callback) ->
     path: "/sns/oauth2/access_token?appid=#{APPID}&secret=#{SECRET}&code=#{CODE}&grant_type=authorization_code"
     headers: accept: '*/*'
   req = https.request options, (res) ->
-    res.on 'data', (d) ->
-      console.log "===> OAUTH DATA with CODE #{CODE}<=== "
+    res.on 'data', (d) ->     
       data = JSON.parse d
-      console.log "oauth result: #{JSON.stringify(data)}"
-      callback data['openid']   
+      console.log "===> OAUTH DATA <=== "
+      console.log "#{JSON.stringify(data)}"
+      callback data['openid'] 
 
   req.end()
   req.on 'error', (e) ->
