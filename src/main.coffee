@@ -88,6 +88,10 @@ app.route('/api/users').post users.create
 #get user info by openid, note if user doesnot exist in backend db
 #we will query wechat server and create user record
 app.route('/api/users/:wechat_openid').get users.get
+#return house list
+houses = require './controller/house_controller'
+app.route('/api/houses').get houses.list
+app.route('/api/houses/:house_id').get houses.get
 
 app.listen 3000, ->
   console.log "ready to serve at port 3000"

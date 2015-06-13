@@ -4,4 +4,5 @@ module.exports = ->
   #register models
   require '../model/order'
   require '../model/user'
+  require '../model/house'
   return db
