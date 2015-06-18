@@ -93,5 +93,13 @@ houses = require './controller/house_controller'
 app.route('/api/houses').get houses.list
 app.route('/api/houses/:house_id').get houses.get
 
+#get available date by house_id
+avail = require './controller/availabledate_controller'
+app.route('/api/available/:house_id').get avail.get
+
+#save survey
+survey = require './controller/survey_controller'
+app.route('/api/surveys').post survey.save
+
 app.listen 3000, ->
   console.log "ready to serve at port 3000"

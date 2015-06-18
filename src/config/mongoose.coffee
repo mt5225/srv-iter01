@@ -5,4 +5,6 @@ module.exports = ->
   require '../model/order'
   require '../model/user'
   require '../model/house'
+  require '../model/cal'
+  require '../model/survey'
   return db

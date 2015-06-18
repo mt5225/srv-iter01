@@ -11,7 +11,10 @@ House = new Schema(
     description: String,
     owner: String,
     ownerid: String,
-    stars: String
+    stars: String,
+    capacity: String,
+    story: String,
+    owner_story: String
 )
 
-module.exports = mongoose.model('House', House)
+mongoose.model 'House', House
