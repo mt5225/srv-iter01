@@ -23,11 +23,8 @@ module.exports = (grunt) ->
       'myhost': grunt.file.readJSON 'tc.host'
 
     sshexec:
-      test:
-        command: 'uptime'
-        options: config: 'myhost'
-      restart_forever:
-        command: "echo"
+      restart:
+        command: "forever restart Kmin"
         options: config: 'myhost'
 
     sftp: 
@@ -44,6 +41,7 @@ module.exports = (grunt) ->
   grunt.registerTask 'run-remote', [
     'coffee'
     'sftp:dev'
+    'sshexec:restart'
   ]
   grunt.registerTask 'run-local', [
     'compile'

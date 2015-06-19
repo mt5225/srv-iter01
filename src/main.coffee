@@ -70,8 +70,9 @@ ping plus plus
 ###
 app.get '/api/pingplus', (req, res) ->
   pingplus = require('./pingplus')
+  channel_type = req.param('channel_type')
   user_openid = req.param('user_openid')
-  pingplus.createCharge user_openid, (charge) ->
+  pingplus.createCharge channel_type, user_openid, (charge) ->
     res.status(200).json charge
 
 ###
