@@ -46,23 +46,17 @@ exports.check = (req, res, next) ->
   dayarray.pop() #exclude checkout day
   console.log dayarray
   houseAvail = require('mongoose').model(req.body.houseId)
-  queries = []
   records = []
-  for item in dayarray
-    query = (cb) ->
-       houseAvail.findOne { day: item }, (err, record) ->
-         records.push record
-         cb()
-    queries.push query
-
   async = require 'async'
-  async.parallel queries, (err) ->
-    #if one of days is booked,  return false
+  async.forEach dayarray, ((item, callback) ->
+    houseAvail.findOne { day: item }, (err, res) ->
+      records.push res
+      callback()
+  ), (err) ->
     for record in records
       console.log record.get('day') + ' is ' + record.get('info.status') 
       if record.get('info.status') != 'available'        
         return res.status(200).json {available: 'false'}
-
     res.status(200).json {available: 'true'}
   
 
