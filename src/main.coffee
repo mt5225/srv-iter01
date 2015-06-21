@@ -82,6 +82,7 @@ app.get '/api/pingplus', (req, res) ->
 orders = require './controller/order_controller'
 app.route('/api/orders').post orders.create
 app.route('/api/orders/:wechat_openid').get orders.list
+app.route('/api/orders/availability').post orders.check
 
 #curl http://localhost:3000/api/users/o82BBs8XqUSk84CNOA3hfQ0kNS90
 users = require './controller/user_controller'
@@ -93,6 +94,7 @@ app.route('/api/users/:wechat_openid').get users.get
 houses = require './controller/house_controller'
 app.route('/api/houses').get houses.list
 app.route('/api/houses/:house_id').get houses.get
+
 
 #get available date by house_id
 avail = require './controller/availabledate_controller'

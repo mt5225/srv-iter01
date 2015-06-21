@@ -18,3 +18,4 @@ exports.get = (req, res, next) ->
       next err
     else
       res.status(200).json house
+

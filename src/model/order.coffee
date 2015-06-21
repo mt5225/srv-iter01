@@ -1,6 +1,8 @@
 mongoose = require 'mongoose'
+
 #register for data model
 Schema = mongoose.Schema
+
 OrderSchema = new Schema (
   orderId: String
   houseId: String
@@ -9,5 +11,10 @@ OrderSchema = new Schema (
   numOfGuest: String
   wechatOpenID: String
   wechatNickName: String
+  status: String
+  createDay: String
+  houseId: String
+  houseName: String
+  totalPrice: String
 )
 mongoose.model 'Order', OrderSchema

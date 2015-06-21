@@ -2,6 +2,7 @@
   "name": "srv-iter01",
   "version": "0.0.1",
   "dependencies": {
+    "async": "^1.2.1",
     "body-parser": "~1.8.0",
     "cors": "~2.6.0",
     "express": "^4.12.3",

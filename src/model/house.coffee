@@ -15,6 +15,7 @@ House = new Schema(
     capacity: String,
     story: String,
     owner_story: String
+    facility: String
 )
 
 mongoose.model 'House', House
