@@ -16,5 +16,9 @@ OrderSchema = new Schema (
   houseId: String
   houseName: String
   totalPrice: String
+  priceByDayArray:  { type : Array , "default" : [] }
+  email: String
+  cell: String
+  plan: String
 )
 mongoose.model 'Order', OrderSchema

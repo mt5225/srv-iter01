@@ -21,17 +21,28 @@ module.exports = (grunt) ->
 
     sshconfig:
       'myhost': grunt.file.readJSON 'tc.host'
+      'myhost_prod': grunt.file.readJSON 'tc_prod.host'
 
     sshexec:
       restart:
         command: "forever restart Kmin"
         options: config: 'myhost'
-
+      restart_prod:
+        command: "forever restart pehW"
+        options: config: 'myhost_prod'
+        
     sftp: 
       dev:
         files:  './': ['dist/**', 'package.json', 'accesskey.json']
         options:
           config: 'myhost'
+          path: '/root/srv-iter01/bin'
+          srcBasePath: 'dist/'
+          createDirectories: true
+      prod:
+        files:  './': ['dist/**', 'package.json', 'accesskey.json']
+        options:
+          config: 'myhost_prod'
           path: '/root/srv-iter01/bin'
           srcBasePath: 'dist/'
           createDirectories: true
@@ -42,6 +53,11 @@ module.exports = (grunt) ->
     'coffee'
     'sftp:dev'
     'sshexec:restart'
+  ]
+  grunt.registerTask 'run-remote-prod', [
+    'coffee'
+    'sftp:prod'
+    'sshexec:restart_prod'
   ]
   grunt.registerTask 'run-local', [
     'compile'

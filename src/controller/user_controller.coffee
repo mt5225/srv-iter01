@@ -15,6 +15,7 @@ exports.get = (req, res, next) ->
         userinfo = require('../userinfo').userinfo
         userinfo.get wechat_openid,(user)->
           userDO = new User(user)
+          userDO.survey = "false"
           userDO.save ->
             if err 
               res.status(400).send message: getErrorMessage(err)
@@ -24,7 +25,7 @@ exports.get = (req, res, next) ->
         console.log "find something in db, return"
         res.status(200).json user
 
-#create new user
+#update or create user
 exports.create = (req, res, next) ->
   console.log "create or update user"
   console.log req.body

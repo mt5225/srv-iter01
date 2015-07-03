@@ -39,6 +39,16 @@ exports.list = (req, res, next) ->
     else
       res.status(200).json orders
 
+#set order status
+exports.setStatus = (req, res, next) ->
+  console.log "===> set order status <==="
+  orderId = req.params['order_id']
+  status = req.body.status
+  console.log "orderId=#{orderId} status=#{status}"
+  Order.update { orderId: orderId }, { $set: status: status }, (err, order) ->
+    console.log order
+    res.status(200).json order
+
 #check house availability
 exports.check = (req, res, next) ->
   console.log "===> check availability for booking <==="

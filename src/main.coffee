@@ -1,4 +1,5 @@
-process.env.NODE_ENV = process.env.NODE_ENV || 'qa';
+#process.env.NODE_ENV = 'qa'
+process.env.NODE_ENV = 'prod'
 express = require './config/express'
 mongoose = require './config/mongoose'
 config = require './config/config'
@@ -72,7 +73,9 @@ app.get '/api/pingplus', (req, res) ->
   pingplus = require('./pingplus')
   channel_type = req.param('channel_type')
   user_openid = req.param('user_openid')
-  pingplus.createCharge channel_type, user_openid, (charge) ->
+  total_price = req.param('total_price')
+  order_number = req.param('order_number')
+  pingplus.createCharge channel_type, user_openid, total_price, order_number, (charge) ->
     res.status(200).json charge
 
 ###
@@ -83,13 +86,15 @@ orders = require './controller/order_controller'
 app.route('/api/orders').post orders.create
 app.route('/api/orders/:wechat_openid').get orders.list
 app.route('/api/orders/availability').post orders.check
+app.route('/api/orders/:order_id').post orders.setStatus
 
 #curl http://localhost:3000/api/users/o82BBs8XqUSk84CNOA3hfQ0kNS90
 users = require './controller/user_controller'
 app.route('/api/users').post users.create
 #get user info by openid, note if user doesnot exist in backend db
-#we will query wechat server and create user record
+#we will query wechat server and create an new user record
 app.route('/api/users/:wechat_openid').get users.get
+
 #return house list
 houses = require './controller/house_controller'
 app.route('/api/houses').get houses.list
@@ -103,6 +108,7 @@ app.route('/api/available/:house_id').get avail.get
 #save survey
 survey = require './controller/survey_controller'
 app.route('/api/surveys').post survey.save
+app.route('/api/surveys/:openid').get survey.find
 
 app.listen 3000, ->
   console.log "ready to serve at port 3000"
