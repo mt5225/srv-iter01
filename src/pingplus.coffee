@@ -14,16 +14,17 @@ exports.createCharge = (channel_type, user_openid, total_price, order_number, ca
     when "wx_pub" then extraOption = {open_id: "#{user_openid}"}
     when "alipay" then extraOption = {}
     when "alipay_wap" then extraOption = {
-      success_url: 'http://qa.aghchina.com.cn:9000'
-      cancel_url: 'http://qa.aghchina.com.cn:9000'
+      success_url: config.REDIRECT_URL
+      cancel_url: config.REDIRECT_URL
     }
   console.log extraOption
 
   pingpp.charges.create {
       subject: 'aghchina'
       body: 'aghchina'
-      amount: parseInt(total_price) * 100
-      order_no: order_number.replace /-/g, ''
+     # amount: parseInt(total_price) * 100
+      amount: 1  #fix amount to test only
+      order_no: order_number
       channel: channel_type
       currency: 'cny'
       client_ip: '127.0.0.1'

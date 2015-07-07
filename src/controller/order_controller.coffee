@@ -6,6 +6,7 @@ exports.create = (req, res, next) ->
   console.log "create new order"
   order = new Order(req.body)
   console.log order
+  order.createDay = dayArray.getDateTime()
   order.save (err) ->
     if err
       console.log err
