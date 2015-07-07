@@ -23,8 +23,8 @@ exports.create = (req, res, next) ->
           if err
             console.log "cannot find record"
           else
-            record.set('info.status', 'booked');
-            record.set('info.info', order.orderId);
+            record.set('info.status', 'booked')
+            record.set('info.info', order.orderId)
             record.save()
 
 
@@ -46,9 +46,23 @@ exports.setStatus = (req, res, next) ->
   orderId = req.params['order_id']
   status = req.body.status
   console.log "orderId=#{orderId} status=#{status}"
-  Order.update { orderId: orderId }, { $set: status: status }, (err, order) ->
-    console.log order
-    res.status(200).json order
+  Order.update { orderId: orderId }, { $set: status: status }, (err, result) ->
+    console.log result
+    res.status(200).json result
+  #release the house
+  if status is "订单取消"
+    Order.findOne {orderId: orderId}, (err, order) ->
+      dayarray =  dayArray.getDayArray(order.checkInDay, order.checkOutDay)
+      dayarray.pop() #exclude checkout day
+      houseAvail = require('mongoose').model(order.houseId)
+      for item in dayarray
+        console.log "set #{item} as booked"
+        houseAvail.findOne { day: item }, (err, record) ->
+            if err
+              console.log "cannot find record"
+            else
+              record.set('info.status', 'available')
+              record.save()
 
 #check house availability
 exports.check = (req, res, next) ->
