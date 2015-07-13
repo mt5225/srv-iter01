@@ -108,6 +108,7 @@ app.route('/api/available/:house_id').get avail.get
 #save survey
 survey = require './controller/survey_controller'
 app.route('/api/surveys').post survey.save
+#get survey
 app.route('/api/surveys/:openid').get survey.find
 
 app.listen 3000, ->

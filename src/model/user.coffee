@@ -20,6 +20,7 @@ UserSchema = new Schema (
   realname: String  #真实姓名
   cell: String  #手机号
   identity: String #证件号
+  identity_type: String #证件类型
 )
 mongoose.model 'User', UserSchema
 

@@ -66,7 +66,7 @@ exports.setStatus = (req, res, next) ->
 
 #check house availability
 exports.check = (req, res, next) ->
-  console.log "===> check availability for booking <==="
+  console.log "===> check availability for booking for house id #{req.body.houseId}<==="
   dayarray =  dayArray.getDayArray(req.body.checkInDay, req.body.checkOutDay)
   dayarray.pop() #exclude checkout day
   console.log dayarray
@@ -79,9 +79,12 @@ exports.check = (req, res, next) ->
       callback()
   ), (err) ->
     for record in records
-      console.log record.get('day') + ' is ' + record.get('info.status') 
-      if record.get('info.status') != 'available'        
-        return res.status(200).json {available: 'false'}
+      if record? 
+        console.log record.get('day') + ' is ' + record.get('info.status') 
+        if record.get('info.status') isnt 'available'        
+          return res.status(200).json {available: 'false'}
+      else
+        return res.status(200).json {available: 'N/A'}
     res.status(200).json {available: 'true'}
   
 
