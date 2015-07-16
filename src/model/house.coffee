@@ -16,6 +16,10 @@ House = new Schema(
     story: String,
     owner_story: String
     facility: String
+    tribe: String
+    house_pic_list: []
+    owner_pic_list: []
+    facility_pic_list: []
 )
 
 mongoose.model 'House', House

@@ -64,6 +64,14 @@ app.get '/api/userinfo', (req, res) ->
     console.log user
     res.status(200).json user
 
+###
+send message to user by openid
+@param openid, message content
+###
+app.post '/api/sendmsg', (req, res) ->
+  message = require('./message')
+  message.send req.body, (msg) ->
+    res.status(200).json msg
 
 ###
 ping plus plus
