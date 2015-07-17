@@ -93,6 +93,7 @@ app.get '/api/pingplus', (req, res) ->
 orders = require './controller/order_controller'
 app.route('/api/orders').post orders.create
 app.route('/api/orders/:wechat_openid').get orders.list
+app.route('/api/orders/orderid/:orderId').get orders.get
 app.route('/api/orders/availability').post orders.check
 app.route('/api/orders/:order_id').post orders.setStatus
 

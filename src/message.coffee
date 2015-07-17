@@ -25,20 +25,3 @@ exports.send = (body, callback) ->
         console.log response.statusCode, body
         callback body
       return
-
-
-###
-==message sample, note the template_id is passed by caller with alias
-       {
-           "touser":"o82BBs8XqUSk84CNOA3hfQ0kNS90",
-           "template_id":"wVs3fCjtb9kvcnE4vscX64bfjmTi5uLoqt6oPjUWmt0",
-           "url":"http://qa.aghchina.com.cn:9000",
-           "topcolor":"#FF0000",
-           "data":{
-                   "first": {
-                       "value":"您好",
-                       "color":"#173177"
-                   }
-           }
-       }
-###
