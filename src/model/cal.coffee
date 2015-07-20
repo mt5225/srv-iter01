@@ -1,7 +1,7 @@
 mongoose = require 'mongoose'
 Schema = mongoose.Schema
 
-for num in [1..12]
+for num in [1..99]
   if num < 10
     id = 'H00' + num
   else

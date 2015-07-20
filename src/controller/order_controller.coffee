@@ -135,7 +135,7 @@ notifyOrderCancelToManager = (order) ->
     msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
     msg.data =
       first: 
-        value: "客户 #{order.wechatNickName} 主动取消了订单"
+        value: "客户 #{order.wechatNickName} 的订单已取消"
         color: "#01579b"
       keyword1: value: "#{order.orderId}"
       keyword2: value: "#{house.tribe}"

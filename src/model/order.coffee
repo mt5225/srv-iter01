@@ -1,8 +1,6 @@
 mongoose = require 'mongoose'
-
 #register for data model
 Schema = mongoose.Schema
-
 OrderSchema = new Schema (
   orderId: String
   houseId: String
