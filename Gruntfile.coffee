@@ -20,22 +20,22 @@ module.exports = (grunt) ->
         script: './dist/main.js'
 
     sshconfig:
-      'myhost': grunt.file.readJSON 'tc.host'
+      'myhost_qa': grunt.file.readJSON 'tc.host'
       'myhost_prod': grunt.file.readJSON 'tc_prod.host'
 
     sshexec:
-      restart:
-        command: "forever restart Kmin"
-        options: config: 'myhost'
+      restart_qa:
+        command: "export NODE_ENV=qa;cd /root/srv-iter01;forever stop bin/main.js;forever start ./bin/main.js"
+        options: config: 'myhost_qa'
       restart_prod:
-        command: "forever restart pehW"
+        command: "export NODE_ENV=prod;cd /root/srv-iter01;forever stop bin/main.js;forever start ./bin/main.js"
         options: config: 'myhost_prod'
         
-    sftp: 
-      dev:
+    sftp:
+      qa:
         files:  './': ['dist/**', 'package.json', 'accesskey.json']
         options:
-          config: 'myhost'
+          config: 'myhost_qa'
           path: '/root/srv-iter01/bin'
           srcBasePath: 'dist/'
           createDirectories: true
@@ -49,10 +49,10 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'default', ['watch']
   grunt.registerTask 'compile', ['coffee']
-  grunt.registerTask 'run-remote', [
+  grunt.registerTask 'run-remote-qa', [
     'coffee'
-    'sftp:dev'
-    'sshexec:restart'
+    'sftp:qa'
+    'sshexec:restart_qa'
   ]
   grunt.registerTask 'run-remote-prod', [
     'coffee'

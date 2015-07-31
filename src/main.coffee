@@ -1,5 +1,3 @@
-process.env.NODE_ENV = 'qa'
-#process.env.NODE_ENV = 'prod'
 express = require './config/express'
 mongoose = require './config/mongoose'
 config = require './config/config'

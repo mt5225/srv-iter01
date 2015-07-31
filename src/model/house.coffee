@@ -14,6 +14,7 @@ House = new Schema(
     ownerid: String
     stars: String
     capacity: String
+    capacity_child: String
     story: String
     owner_story: String
     facility: String

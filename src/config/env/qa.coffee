@@ -6,7 +6,7 @@ module.exports =
   PING_TEST_KEY : 'sk_test_TKin5C488mbH88CeTKH40KuT'
   REDIRECT_URL : 'http://qa.aghchina.com.cn:9000'
   MNGT_URL : 'http://qa.aghchina.com.cn:3033'
-  MANAGER_OPENID : 'o82BBs8XqUSk84CNOA3hfQ0kNS90'
+  MANAGER_OPENID_LIST : ['o82BBs8XqUSk84CNOA3hfQ0kNS90', 'o82BBsx0vTfswCKuY8hlfJTAMgJo', 'o82BBs5bAuCz3u_MDzSfF9RSu8l4', 'o82BBs9o0ndCJPt0bDxrzhpettpE', 'o82BBs0d7Bs5YGHEC6qBr7TPlOg8'] #管家OPEN_ID列表
   WECHAT_MSG_T : 
     resv_success : 'mP3VycImBswOGo2p7qIS2SvxwiAbXGVwZwNzR5BzmJY' #新订单通知 [to user and manager]
     cancel_warnning : '3X_8Fs8aTn6N1XDw_1UF8yK0ZGJW3V2nQYjdIFG9tE0' #订单无效通知, 用于系统自动取消订单的告警消息 [to user and manager]

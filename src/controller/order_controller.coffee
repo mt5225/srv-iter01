@@ -64,6 +64,11 @@ exports.setStatus = (req, res, next) ->
     console.log result
     res.status(200).json result
   #release the house
+  if status is "预订成功"
+    Order.findOne {orderId: orderId}, (err, order) ->
+      console.log "send notiication to manager about #{order.orderId} success"
+      notifyPaySuccessToManager order
+    
   if status is "订单取消"
     Order.findOne {orderId: orderId}, (err, order) ->
       console.log "send notiication to manager about #{order.orderId} cancel"
@@ -107,46 +112,70 @@ exports.check = (req, res, next) ->
 #send notiication message to manager about new order
 notifyNewOrderToManager = (order) ->
   House.findOne({'id': order.houseId}).exec (err, house) ->
-    msg = {}
-    msg.touser = "#{config.MANAGER_OPENID}"
-    msg.template_name = "resv_success"
-    msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
-    msg.data = 
-      first: 
-        value: "客户 #{order.wechatNickName} 提交了新订单，单号 #{order.orderId}"
-        color: "#01579b"
-      keyword1: value: "#{house.tribe}"
-      keyword2: value: "#{order.houseName}"
-      keyword3: value: "入住日期#{order.checkInDay}，退房日期#{order.checkOutDay}"
-      keyword4: value: "1"
-      keyword5: value: "#{order.totalPrice}元"
-      remark: 
-        value: "订单处理及查看详情请点击本消息"
-        color: "#01579b"
-    message.send msg, (result) ->
-      console.log result
+    for openid in config.MANAGER_OPENID_LIST
+      msg = {}
+      msg.touser = "#{openid}"
+      msg.template_name = "resv_success"
+      msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
+      msg.data = 
+        first: 
+          value: "客户 #{order.wechatNickName} 提交了新订单，单号 #{order.orderId}"
+          color: "#01579b"
+        keyword1: value: "#{house.tribe}"
+        keyword2: value: "#{order.houseName}"
+        keyword3: value: "入住日期#{order.checkInDay}，退房日期#{order.checkOutDay}"
+        keyword4: value: "1"
+        keyword5: value: "#{order.totalPrice}元"
+        remark: 
+          value: "订单处理及查看详情请点击本消息"
+          color: "#01579b"
+      message.send msg, (result) ->
+        console.log result
 
 #send notiication message to manager about order been cancel
 notifyOrderCancelToManager = (order) ->
   House.findOne({'id': order.houseId}).exec (err, house) ->
-    msg = {}
-    msg.touser = "#{config.MANAGER_OPENID}"
-    msg.template_name = "mngt_order_cancel"
-    msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
-    msg.data =
-      first: 
-        value: "客户 #{order.wechatNickName} 的订单已取消"
-        color: "#01579b"
-      keyword1: value: "#{order.orderId}"
-      keyword2: value: "#{house.tribe}"
-      keyword3: value: "#{house.name}"
-      keyword4: value: "#{order.checkInDay}"
-      keyword5: value: "#{order.checkOutDay}"
-      remark: 
-        value: "请确认房源是否已释放，查看订单详情请点击本消息"
-        color: "#01579b"
-    message.send msg, (result) ->
-      console.log result   
+    for openid in config.MANAGER_OPENID_LIST
+      msg = {}
+      msg.touser = "#{openid}"
+      msg.template_name = "mngt_order_cancel"
+      msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
+      msg.data =
+        first: 
+          value: "客户 #{order.wechatNickName} 的订单已取消"
+          color: "#01579b"
+        keyword1: value: "#{order.orderId}"
+        keyword2: value: "#{house.tribe}"
+        keyword3: value: "#{house.name}"
+        keyword4: value: "#{order.checkInDay}"
+        keyword5: value: "#{order.checkOutDay}"
+        remark: 
+          value: "请确认房源是否已释放，查看订单详情请点击本消息"
+          color: "#01579b"
+      message.send msg, (result) ->
+        console.log result   
+
+#send notiication message to manager about order been cancel
+notifyPaySuccessToManager = (order) ->
+  House.findOne({'id': order.houseId}).exec (err, house) ->
+    for openid in config.MANAGER_OPENID_LIST
+      msg = {}
+      msg.touser = "#{openid}"
+      msg.template_name = "book_success"
+      msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
+      msg.data =
+        first: 
+          value: "客户 #{order.wechatNickName} 的订单支付成功，订单号为#{order.orderId}，请确认"
+          color: "#01579b"
+        hotelName: value: "#{house.tribe}"
+        roomName: value: "#{house.name}"
+        pay: value: "#{order.totalPrice}"
+        date: value: "#{order.checkInDay}"
+        remark: 
+          value: "查看订单详情请点击本消息"
+          color: "#01579b"
+      message.send msg, (result) ->
+        console.log result 
 
 
 

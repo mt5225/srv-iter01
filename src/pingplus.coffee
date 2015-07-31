@@ -22,8 +22,8 @@ exports.createCharge = (channel_type, user_openid, total_price, order_number, ca
   pingpp.charges.create {
       subject: 'aghchina'
       body: 'aghchina'
-     # amount: parseInt(total_price) * 100
-      amount: 1  #fix amount to test only
+      amount: parseInt(total_price) * 100
+      #amount: 1  #fix amount to test only
       order_no: order_number
       channel: channel_type
       currency: 'cny'
