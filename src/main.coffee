@@ -46,11 +46,41 @@ app.get '/api/useroauth', (req, res) ->
   code = req.param('code')
   backurl = req.param('state')
   console.log "code = #{code}, backurl=#{backurl}"
-  useroauth.getOAuth APPID, SECRET, code, (openid) ->  #get user openid using code
-    console.log "redirct user to #{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"
-    res.writeHead 301, {Location: "#{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"}
+  if code is 'authdeny' #user deny 
+    res.writeHead 301, {Location: "http://mp.weixin.qq.com/s?__biz=MzA5NDEyMTEzNg==&mid=215293392&idx=1&sn=0b64443c8cd5f091cc646b1850e2b7e9#rd"}
     res.end()
-    
+  else
+    useroauth.getOAuth APPID, SECRET, code, (openid) ->  #get user openid using code
+      #check if user is subscribe 
+      userinfo = require('./userinfo').userinfo
+      userinfo.get openid, (wechatuser)->
+        console.log wechatuser
+        if wechatuser? && wechatuser.subscribe is 1
+          console.log "subscribe user, check if user is in local database"
+          User = require('mongoose').model('User')
+          User.findOne('openid': "#{wechatuser.openid}").exec (err, user) ->
+            console.log user
+            if !user?
+              console.log "user is not in db, create new record"
+              userDO = new User(wechatuser)
+              userDO.survey = "false"
+              userDO.save (err) ->
+                if err 
+                  res.writeHead 301, {Location: "http://mp.weixin.qq.com/s?__biz=MzA5NDEyMTEzNg==&mid=215293392&idx=1&sn=0b64443c8cd5f091cc646b1850e2b7e9#rd"}
+                  res.end()
+                else
+                  console.log "saved user to db, redirct user to #{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"
+                  res.writeHead 301, {Location: "#{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"}
+                  res.end()
+              return          
+            else
+              console.log "user in db, redirct user to #{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"
+              res.writeHead 301, {Location: "#{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"}
+              res.end()
+        else
+          console.log "user is not in subscribe mode, redirct user to #{REDIRECT_URL}/#/barcode"
+          res.writeHead 301, {Location: "http://mp.weixin.qq.com/s?__biz=MzA5NDEyMTEzNg==&mid=215348069&idx=1&sn=1b6212acc08997184fc8347be78acf40#rd"}
+          res.end()
 
 ###
 @depredated get user info by openid
@@ -98,8 +128,10 @@ app.route('/api/orders/:order_id').post orders.setStatus
 #curl http://localhost:3000/api/users/o82BBs8XqUSk84CNOA3hfQ0kNS90
 users = require './controller/user_controller'
 app.route('/api/users').post users.create
+###########################
 #get user info by openid, note if user doesnot exist in backend db
 #we will query wechat server and create an new user record
+###########################
 app.route('/api/users/:wechat_openid').get users.get
 
 #return house list

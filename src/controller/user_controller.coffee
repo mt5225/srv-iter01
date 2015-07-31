@@ -10,17 +10,18 @@ exports.get = (req, res, next) ->
       next err
     else
       console.log "user query result #{JSON.stringify(user)}"
-      if user == null 
+      if !user?
         console.log "query wechat server to get user info and store in db"
         userinfo = require('../userinfo').userinfo
         userinfo.get wechat_openid,(user)->
           userDO = new User(user)
           userDO.survey = "false"
-          userDO.save ->
-            if err 
-              res.status(400).send message: getErrorMessage(err)
-            else
-              res.status(200).json user
+          if !userDO? && !userDO.openid?
+            userDO.save ->
+              if err 
+                res.status(400).send message: getErrorMessage(err)
+              else
+                res.status(200).json user
       else
         console.log "find something in db, return"
         res.status(200).json user
