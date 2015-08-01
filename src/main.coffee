@@ -45,7 +45,7 @@ app.get '/api/useroauth', (req, res) ->
   useroauth = require './useroauth'
   code = req.param('code')
   backurl = req.param('state')
-  console.log "code = #{code}, backurl=#{backurl}"
+  console.log "code = #{code}, backurl=#{backurl} #{APPID} #{SECRET}"
   if code is 'authdeny' #user deny 
     res.writeHead 301, {Location: "http://mp.weixin.qq.com/s?__biz=MzA5NDEyMTEzNg==&mid=215293392&idx=1&sn=0b64443c8cd5f091cc646b1850e2b7e9#rd"}
     res.end()

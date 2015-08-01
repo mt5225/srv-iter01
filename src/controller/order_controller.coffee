@@ -63,27 +63,27 @@ exports.setStatus = (req, res, next) ->
   Order.update { orderId: orderId }, { $set: status: status }, (err, result) ->
     console.log result
     res.status(200).json result
-  #release the house
-  if status is "预订成功"
-    Order.findOne {orderId: orderId}, (err, order) ->
-      console.log "send notiication to manager about #{order.orderId} success"
-      notifyPaySuccessToManager order
-    
-  if status is "订单取消"
-    Order.findOne {orderId: orderId}, (err, order) ->
-      console.log "send notiication to manager about #{order.orderId} cancel"
-      notifyOrderCancelToManager order
-      dayarray =  dayArray.getDayArray(order.checkInDay, order.checkOutDay)
-      dayarray.pop() #exclude checkout day
-      houseAvail = require('mongoose').model(order.houseId)
-      for item in dayarray
-        console.log "set #{item} as booked"
-        houseAvail.findOne { day: item }, (err, record) ->
-            if err
-              console.log "cannot find record"
-            else
-              record.set('info.status', 'available')
-              record.save()
+  
+  switch status
+    when "预订成功" 
+      Order.findOne {orderId: orderId}, (err, order) ->
+        console.log "send notiication to manager about #{order.orderId} success"
+        notifyPaySuccessToManager order
+    when "订单取消" 
+      Order.findOne {orderId: orderId}, (err, order) ->
+        console.log "send notiication to manager about #{order.orderId} cancel"
+        notifyOrderCancelToManager order
+        dayarray =  dayArray.getDayArray(order.checkInDay, order.checkOutDay)
+        dayarray.pop() #exclude checkout day
+        houseAvail = require('mongoose').model(order.houseId)
+        for item in dayarray
+          console.log "set #{item} as available"
+          houseAvail.findOne { day: item }, (err, record) ->
+              if err
+                console.log "cannot find record"
+              else
+                record.set('info.status', 'available')
+                record.save()
 
 #check house availability
 exports.check = (req, res, next) ->
@@ -119,7 +119,7 @@ notifyNewOrderToManager = (order) ->
       msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
       msg.data = 
         first: 
-          value: "客户 #{order.wechatNickName} 提交了新订单，单号 #{order.orderId}"
+          value: "[管家消息] 客户 #{order.wechatNickName} 提交了新订单，单号 #{order.orderId}"
           color: "#01579b"
         keyword1: value: "#{house.tribe}"
         keyword2: value: "#{order.houseName}"
@@ -142,7 +142,7 @@ notifyOrderCancelToManager = (order) ->
       msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
       msg.data =
         first: 
-          value: "客户 #{order.wechatNickName} 的订单已取消"
+          value: "[管家消息] 客户 #{order.wechatNickName} 的订单已取消"
           color: "#01579b"
         keyword1: value: "#{order.orderId}"
         keyword2: value: "#{house.tribe}"
@@ -161,11 +161,11 @@ notifyPaySuccessToManager = (order) ->
     for openid in config.MANAGER_OPENID_LIST
       msg = {}
       msg.touser = "#{openid}"
-      msg.template_name = "book_success"
+      msg.template_name = "order_success"
       msg.url = "#{config.MNGT_URL}/#/orders/#{order.orderId}"
       msg.data =
         first: 
-          value: "客户 #{order.wechatNickName} 的订单支付成功，订单号为#{order.orderId}，请确认"
+          value: "[管家消息] 客户 #{order.wechatNickName} 的订单支付成功，订单号为#{order.orderId}，请确认"
           color: "#01579b"
         hotelName: value: "#{house.tribe}"
         roomName: value: "#{house.name}"
