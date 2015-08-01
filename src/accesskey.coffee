@@ -48,9 +48,10 @@ perfect.AccessKey = do ->
       console.log "cached key= " + contents['key']
       key = contents['key']
       timegap = parseInt((new Date).getTime() / 1000) - parseInt(contents['timestamp'])
-      #if ticket is within 2 hours
-      if timegap < 7200
-        console.log "within 2hour, read access key from local cache"
+      #if ticket is within 3 mintues
+      console.log "key age #{timegap} seconds"
+      if timegap < 180
+        console.log "within 3 mintues, read access key from local cache"
         callback key
       else
         console.log "generate an new ticket"

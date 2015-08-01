@@ -19,7 +19,7 @@ perfect.UserInfo = do ->
       req = https.request options, (res) ->
         res.on 'data', (d) ->
           console.log "===> DATA <=== "
-          data = JSON.parse d
+          data = JSON.parse d 
           callback data
 
       req.end()
