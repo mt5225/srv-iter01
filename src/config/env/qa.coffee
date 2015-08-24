@@ -7,6 +7,7 @@ module.exports =
   REDIRECT_URL : 'http://qa.aghchina.com.cn:9000'
   MNGT_URL : 'http://qa.aghchina.com.cn:3033'
   MANAGER_OPENID_LIST : ['o82BBs8XqUSk84CNOA3hfQ0kNS90', 'o82BBs9o0ndCJPt0bDxrzhpettpE'] #管家OPEN_ID列表
+  NEWRELIC_KEY : 'cae2b2befca3c7197c79de454df83d76c540456d'
   WECHAT_MSG_T : 
     resv_success : 'mP3VycImBswOGo2p7qIS2SvxwiAbXGVwZwNzR5BzmJY' #新订单通知 [to user and manager]
     cancel_warnning : '3X_8Fs8aTn6N1XDw_1UF8yK0ZGJW3V2nQYjdIFG9tE0' #订单无效通知, 用于系统自动取消订单的告警消息 [to user and manager]

@@ -1,3 +1,4 @@
+#require('newrelic') if process.env.NODE_ENV isnt 'prod'
 express = require './config/express'
 mongoose = require './config/mongoose'
 config = require './config/config'
