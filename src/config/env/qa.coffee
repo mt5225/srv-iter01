@@ -5,6 +5,7 @@ module.exports =
   PING_TRADE_KEY : 'sk_live_twTLI4mLYMAeSaQ30BwpRHwW'
   PING_TEST_KEY : 'sk_test_TKin5C488mbH88CeTKH40KuT'
   REDIRECT_URL : 'http://qa.aghchina.com.cn:9000'
+  REDIRECT_URL_NODEBB : 'http://qa.aghchina.com.cn:3008'
   MNGT_URL : 'http://qa.aghchina.com.cn:3033'
   MANAGER_OPENID_LIST : ['o82BBs8XqUSk84CNOA3hfQ0kNS90', 'o82BBs9o0ndCJPt0bDxrzhpettpE'] #管家OPEN_ID列表
   NEWRELIC_KEY : 'cae2b2befca3c7197c79de454df83d76c540456d'

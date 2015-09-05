@@ -48,7 +48,7 @@ module.exports = (grunt) ->
           createDirectories: true
 
   grunt.registerTask 'default', ['watch']
-  grunt.registerTask 'compile', ['coffee']
+  grunt.registerTask 'dist', ['coffee']
   grunt.registerTask 'run-remote-qa', [
     'coffee'
     'sftp:qa'

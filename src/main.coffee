@@ -6,6 +6,7 @@ config = require './config/config'
 APPID = config.APPID
 SECRET = config.APPSecret
 REDIRECT_URL = config.REDIRECT_URL
+REDIRECT_URL_NODEBB = config.REDIRECT_URL_NODEBB
 
 db = mongoose()
 app = express()
@@ -75,9 +76,16 @@ app.get '/api/useroauth', (req, res) ->
                   res.end()
               return          
             else
-              console.log "user in db, redirct user to #{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"
-              res.writeHead 301, {Location: "#{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"}
-              res.end()
+              if backurl is 'nodebb'
+                nickname = require('querystring').escape user.nickname
+                avatar = require('querystring').escape user.headimgurl
+                console.log "user in db, redict to nodebb sso srv #{REDIRECT_URL_NODEBB}/api/login?openid=#{openid}&nickname=#{nickname}&avatar=#{avatar}"           
+                res.writeHead 301, {Location: "#{REDIRECT_URL_NODEBB}/api/login?openid=#{openid}&nickname=#{nickname}&avatar=#{avatar}"}
+                res.end()
+              else
+                console.log "user in db, redirct user to #{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"
+                res.writeHead 301, {Location: "#{REDIRECT_URL}/#/#{backurl}?openid=#{openid}"}
+                res.end()
         else
           console.log "user is not in subscribe mode, redirct user to #{REDIRECT_URL}/#/barcode"
           res.writeHead 301, {Location: "http://mp.weixin.qq.com/s?__biz=MzA5NDEyMTEzNg==&mid=215348069&idx=1&sn=1b6212acc08997184fc8347be78acf40#rd"}
